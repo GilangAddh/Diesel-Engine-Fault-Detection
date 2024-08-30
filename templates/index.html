@@ -4,10 +4,13 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Diesel Engine Fault Detection</title>
-        <link href="./output.css" rel="stylesheet">
+        <link href="./static/output.css" rel="stylesheet">
+        <link rel="stylesheet" href="{{ url_for('static', filename='output.css')}}">
     </head>
     <body>
-        <h1>Welcome to My Flask App!</h1>
-        <p>This is the home page.</p>
+        <div class="bg-red-300">
+            <h1 class="text-3xl font-bold">Welcome to My Flask App!</h1>
+            <p>This is the home page.</p>
+        </div>
     </body>
 </html>
