@@ -13,6 +13,7 @@ def home():
 '''
 Param :
     nPercobaan : jumlah percobaan (Number/String)
+    nSilinder : banyaknya silinder mesin (optional, default : 6)
     tekananN : tekenan ke-n (Number/String)
 Contoh :
     Jika percobaan 3 kali, dilakukan di silinder 1 maka :
@@ -36,10 +37,11 @@ Result : {
 @app.route("/getMaxMean",  methods=['POST'])
 def index():
     nPercobaan = request.json['nPercobaan']
+    nSilinder = request.json.get('nSilinder',6)
     result = {}
 
-    for i in range(1,nPercobaan):
-        tekanan_values = [request.json[f"tekanan{j}s{i}"] for j in range(1, request.json["nPercobaan"] + 1)]
+    for i in range(1,nSilinder+1):
+        tekanan_values = [request.json[f"tekanan{j}s{i}"] for j in range(1, nPercobaan+ 1)]
         tmax = max(tekanan_values)
         tmean = sum(tekanan_values) / request.json["nPercobaan"]
         result[f"mp{i}"] = tmax
