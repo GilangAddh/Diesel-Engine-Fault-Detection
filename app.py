@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request,jsonify
 
 from flask_cors import CORS
+import numpy as np
 
 app = Flask(__name__)
 CORS(app)
@@ -9,35 +10,46 @@ CORS(app)
 def home():
     return render_template('index.html')
 
-@app.route('/predict', methods=['POST'])
-def predict():
-    # mp = tekanan maksimum
-    # mu = tekanan rata-rata
+'''
+Param :
+    nPercobaan : jumlah percobaan (Number/String)
+    tekananN : tekenan ke-n (Number/String)
+Contoh :
+    Jika percobaan 3 kali, dilakukan di silinder 1 maka :
+    nPercobaan = 3,
+    tekenan1s1 : 0.75,
+    tekenan2s1 : 0.25,
+    tekenan3s1 : 0.5,
     
-    mp1 = request.json['mp1']
-    mp2 = request.json['mp2']
-    mp3 = request.json['mp3']
-    mp4 = request.json['mp4']
-    mp5 = request.json['mp5']
-    mp6 = request.json['mp6']
+    Jika percobaan 2 kali, dilakukan di silinder 6 maka :
+    nPercobaan = 2,
+    tekenan1s6 : 5,
+    tekenan2s6 : 5,
     
-    mu1 = request.json['mu1']
-    mu2 = request.json['mu2']
-    mu3 = request.json['mu3']
-    mu4 = request.json['mu4']
-    mu5 = request.json['mu5']
-    mu6 = request.json['mu6']
-    
-    mp = [mp1, mp2, mp3, mp4, mp5, mp6]
-    mu = [mu1, mu2, mu3, mu4, mu5, mu6]
-        
+Result : {
+    "mp1": Number/String,
+    "mp2": Number/String,
+    "mu1": Number/String,
+    "mu2": Number/String,
+    }
+'''
+@app.route("/getMaxMean",  methods=['POST'])
+def index():
+    nPercobaan = request.json['nPercobaan']
+    result = {}
+
+    for i in range(1,nPercobaan):
+        tekanan_values = [request.json[f"tekanan{j}s{i}"] for j in range(1, request.json["nPercobaan"] + 1)]
+        tmax = max(tekanan_values)
+        tmean = sum(tekanan_values) / request.json["nPercobaan"]
+        result[f"mp{i}"] = tmax
+        result[f"mu{i}"] = tmean
+
     return jsonify({
         'message':'success',
         'code':200,
-        'data':{
-            'mp':mp,
-            'mu':mu
-        }
+        "data":result,
     })
+
 if __name__ == '__main__':
     app.run(debug=True)
