@@ -4,14 +4,70 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Diesel Engine Fault Detection</title>
-        <link rel="stylesheet" href="{{ url_for('static', filename='output.css')}}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/output.css')}}">
+        <!-- Daisy -->
         <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.10/dist/full.min.css" rel="stylesheet" type="text/css">
+        <!-- Googlefont -->
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
     </head>
-    <body>
-        <div class="bg-red-700">
-            <h1 class="text-3xl font-bold">Welcome to My Flask App!</h1>
-            <p>This is the home page.</p>
-        </div>
+    <body class="font-[Poppins]">
+        <header class="bg-[#03AED2] sticky top-0 z-10">
+            <p class="p-4 text-xl text-[#EEF7FF] font-bold">Lorem Ipsum</p>
+        </header>
+        <main class="bg-[#EEF7FF]">
+            <section id="hero">
+                <div class="hero min-h-screen">
+                    <div class="hero-content flex-col lg:flex-row">
+                        <div class="carousel max-w-sm mr-8 pt-10">
+                            <div id="slide1" class="carousel-item relative w-full">
+                                <img src="{{ url_for('static', filename='assets/images/engine1.jpeg')}}" class="rounded-lg shadow-2xl mr-4">
+                                <div class="absolute left-5 right-5 top-1/2 flex -translate-y-1/2 transform justify-between">
+                                    <a href="#slide3" class="btn btn-circle">❮</a>
+                                    <a href="#slide2" class="btn btn-circle">❯</a>
+                                </div>
+                            </div>
+                            <div id="slide2" class="carousel-item relative w-full">
+                                <img src="{{ url_for('static', filename='assets/images/engine2.jpeg')}}" class="rounded-lg shadow-2xl mr-4">
+                                <div class="absolute left-5 right-5 top-1/2 flex -translate-y-1/2 transform justify-between">
+                                    <a href="#slide1" class="btn btn-circle">❮</a>
+                                    <a href="#slide3" class="btn btn-circle">❯</a>
+                                </div>
+                            </div>
+                            <div id="slide3" class="carousel-item relative w-full">
+                                <img src="{{ url_for('static', filename='assets/images/engine3.jpeg')}}" class="rounded-lg shadow-2xl mr-4">
+                                <div class="absolute left-5 right-5 top-1/2 flex -translate-y-1/2 transform justify-between">
+                                    <a href="#slide2" class="btn btn-circle">❮</a>
+                                    <a href="#slide1" class="btn btn-circle">❯</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <h1 class="text-5xl font-bold text-[#03AED2]">Deteksi Kerusakan Mesin Diesel Anda!</h1>
+                            <p class="py-6">
+                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Qui deleniti in, ea eius eos, nesciunt officiis, sapiente minus ipsam hic architecto maxime atque possimus omnis velit! Tenetur recusandae quas nulla in voluptatibus eligendi, soluta magnam labore enim sed nobis officiis aliquam exercitationem dolorum! Sit at eos facilis reiciendis debitis maiores voluptatem eveniet laboriosam suscipit sint ipsam nostrum eaque, assumenda perferendis!
+                            </p>
+                            <button class="btn font-bold bg-[#03AED2] text-white hover:text-[#03AED2] hover:bg-white hover:border-[#03AED2] border-2">Ayo Deteksi</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <section>
+                <div class="p-6 m-6 rounded-lg border-2 border-dashed border-[#03AED2]">
+                    <h1 class="text-2xl font-bold text-[#03AED2]">Deteksi Disini!</h1>
+                    <div class="my-8">
+                        <label class="input input-bordered flex items-center gap-2 w-1/4">
+                            Cylinder 1
+                            <input type="text" class="grow" placeholder="Cylinder 1">
+                        </label>
+                    </div>
+                </div>
+            </section>
+        </main>
+        <footer class="bg-[#03AED2]">
+            <p class="text-center p-4 text-xl text-[#EEF7FF] font-bold">Copyright@2024</p>
+        </footer>
         <script src="https://cdn.tailwindcss.com"></script>
     </body>
 </html>
