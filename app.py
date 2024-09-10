@@ -115,7 +115,7 @@ def getMaxMean():
     })
 
 # Untuk sementara predict menggunakan data dummy
-@app.route("/predict", methods=['GET'])
+@app.route("/predict", methods=['POST'])
 def predict():
     model_save_path = f'model/0db_KFold/model_ann_fold_4.h5'
     trained_model = tf.keras.models.load_model(model_save_path)
@@ -127,6 +127,9 @@ def predict():
         2: 'compression ratio reduction',
         3: 'reduction of amount of fuel injected'
     }
+
+    #get data form
+    data = request.form.getlist('data_item[]')
     
     x = tf.convert_to_tensor([0.989485505, 0.989842059, 0.989769292, 0.989689835, 0.858474522, 0.98955769, 
                               0.973703785, 0.999920595, 0.999897156, 0.998918769, 0.91455455, 0.999916694, 
@@ -142,8 +145,8 @@ def predict():
                               0.226721672, 0.06251139, 0.979988337, 0.25853748, 0.621645889, 0.866603205, 
                               0.689587252, 0.735319815, 0.944162944, 0.396483359, 0.831693689, 0.486495649, 
                               0.917102811, 0.680523642, 0.454790335, 0.058308235])
-    x = tf.expand_dims(x, 0)
-    predicted_classes = trained_model.predict(x).argmax(axis=1)
+    data = tf.expand_dims(x, 0)
+    predicted_classes = trained_model.predict(data).argmax(axis=1)
     
     # Map predictions to class labels
     predicted_labels = [label_dict[pred] for pred in predicted_classes]
@@ -152,6 +155,12 @@ def predict():
         'code':200,
         "data":predicted_labels[0],
     })
+
+# @app.route('/predict', methods=['POST'])
+# def predict():
+#     data = request.form.getlist('data_item[]')  # menerima input sebagai array
+#     # Lakukan sesuatu dengan data
+#     return f"Data yang diterima: {data}"
 
 if __name__ == '__main__':
     app.run(debug=True)

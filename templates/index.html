@@ -93,10 +93,11 @@
                             </div>
                         </dialog>
                     </div>
-                    {% for section_item in section %}
-                    <div class="my-8 p-4 border-2 border-[#03AED2] rounded-md">
-                        <h3 class="text-xl font-bold text-[#03AED2]">{{ section_item.name }}</h3>
-                        <!-- <div class="flex my-4 flex-wrap gap-4">
+                    <form action="/predict" method="POST">
+                        {% for section_item in section %}
+                        <div class="my-8 p-4 border-2 border-[#03AED2] rounded-md">
+                            <h3 class="text-xl font-bold text-[#03AED2]">{{ section_item.name }}</h3>
+                            <!-- <div class="flex my-4 flex-wrap gap-4">
                             <label class="form-control w-full max-w-xs">
                                 <div class="label">
                                     <span class="label-text">Cylinder 1</span>
@@ -134,23 +135,27 @@
                                 <input type="text" placeholder="Cylinder 6" class="input input-bordered w-full max-w-xs">
                             </label>
                         </div> -->
-                        <div class="flex my-4 flex-wrap gap-4">
-                            {% for data_item in section_item.label %}
-                            <label class="form-control w-full max-w-xs">
-                                <div class="label">
-                                    <span class="label-text">{{data_item }}</span>
-                                </div>
-                                <input
-                                    type="text"
-                                    placeholder="{{data_item}}"
-                                    class="input input-bordered w-full max-w-xs"
-                                    name="{{data_item}}"
-                                >
-                            </label>
-                            {% endfor %}
+                            <div class="flex my-4 flex-wrap gap-4 justify-between">
+                                {% for data_item in section_item.label %}
+                                <label class="form-control w-full max-w-[14rem]">
+                                    <div class="label">
+                                        <span class="label-text">{{data_item }}</span>
+                                    </div>
+                                    <input
+                                        type="text"
+                                        inputmode="numeric"
+                                        placeholder="{{data_item}}"
+                                        class="input input-bordered w-full "
+                                        name="data_item[]"
+                                        value="0.5"
+                                    >
+                                </label>
+                                {% endfor %}
+                            </div>
                         </div>
-                    </div>
-                    {% endfor %}
+                        {% endfor %}
+                        <button type="submit" class="btn text-[18px] font-bold bg-[#03AED2] text-white hover:text-[#03AED2] hover:bg-white hover:border-[#03AED2] border-2 w-full">Deteksi</button>
+                    </form>
                 </div>
             </section>
         </main>
