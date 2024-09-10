@@ -9,7 +9,67 @@ CORS(app)
 
 @app.route('/')
 def home():
-    return render_template('index.html')
+    section = [
+        {
+            "name": "Tekanan Maksimal",
+            "label": ["Tekanan Maksimal 1", "Tekanan Maksimal 2", "Tekanan Maksimal 3", "Tekanan Maksimal 4", "Tekanan Maksimal 5", "Tekanan Maksimal 6"],
+            "input": ["mp1", "mp2", "mp3", "mp4", "mp5", "mp6"]
+        },
+        {
+            "name": "Tekanan Rata-Rata",
+            "label": ["Tekanan Rata-Rata 1", "Tekanan Rata-Rata 2", "Tekanan Rata-Rata 3", "Tekanan Rata-Rata 4", "Tekanan Rata-Rata 5", "Tekanan Rata-Rata 6"],
+            "input": ["mu1", "mu2", "mu3", "mu4", "mu5", "mu6"]
+        },
+        {
+            "name": "Frekuensi",
+            "label": [
+                "Frekuensi 1", "Frekuensi 2", "Frekuensi 3", "Frekuensi 4", "Frekuensi 5", 
+                "Frekuensi 6", "Frekuensi 7", "Frekuensi 8", "Frekuensi 9", "Frekuensi 10", 
+                "Frekuensi 11", "Frekuensi 12", "Frekuensi 13", "Frekuensi 14", "Frekuensi 15", 
+                "Frekuensi 16", "Frekuensi 17", "Frekuensi 18", "Frekuensi 19", "Frekuensi 20", 
+                "Frekuensi 21", "Frekuensi 22", "Frekuensi 23", "Frekuensi 24"
+            ],
+            "input": [
+                "fr1", "fr2", "fr3", "fr4", "fr5", "fr6",
+                "fr7", "fr8", "fr9", "fr10", "fr11", "fr12", 
+                "fr13", "fr14", "fr15", "fr16", "fr17", "fr18",
+                "fr19", "fr20", "fr21", "fr22", "fr23", "fr24"
+            ]
+        },
+        {
+            "name": "Amplitude",
+            "label": [
+                "Amplitude 1", "Amplitude 2", "Amplitude 3", "Amplitude 4", "Amplitude 5", 
+                "Amplitude 6", "Amplitude 7", "Amplitude 8", "Amplitude 9", "Amplitude 10", 
+                "Amplitude 11", "Amplitude 12", "Amplitude 13", "Amplitude 14", "Amplitude 15", 
+                "Amplitude 16", "Amplitude 17", "Amplitude 18", "Amplitude 19", "Amplitude 20", 
+                "Amplitude 21", "Amplitude 22", "Amplitude 23", "Amplitude 24"
+            ],
+            "input": [
+                "amp1", "amp2", "amp3", "amp4", "amp5", "amp6",
+                "amp7", "amp8", "amp9", "amp10", "amp11", "amp12", 
+                "amp13", "amp14", "amp15", "amp16", "amp17", "amp18",
+                "amp19", "amp20", "amp21", "amp22", "amp23", "amp24"
+            ]
+        },
+        {
+            "name": "Gerakan Harmoni",
+            "label": [
+                "Gerakan 1", "Gerakan 2", "Gerakan 3", "Gerakan 4", "Gerakan 5", 
+                "Gerakan 6", "Gerakan 7", "Gerakan 8", "Gerakan 9", "Gerakan 10", 
+                "Gerakan 11", "Gerakan 12", "Gerakan 13", "Gerakan 14", "Gerakan 15", 
+                "Gerakan 16", "Gerakan 17", "Gerakan 18", "Gerakan 19", "Gerakan 20", 
+                "Gerakan 21", "Gerakan 22", "Gerakan 23", "Gerakan 24"
+            ],
+            "input": [
+                "gh1", "gh2", "gh3", "gh4", "gh5", "gh6",
+                "gh7", "gh8", "gh9", "gh10", "gh11", "gh12", 
+                "gh13", "gh14", "gh15", "gh16", "gh17", "gh18",
+                "gh19", "gh20", "gh21", "gh22", "gh23", "gh24"
+            ]
+        }
+    ]
+    return render_template('index.html', section=section)
 
 '''
 Param :
@@ -41,21 +101,21 @@ def getMaxMean():
     nSilinder = request.json.get('nSilinder',6)
     result = {}
 
-    for i in range(1,nSilinder+1):
-        tekanan_values = [request.json[f"tekanan{j}s{i}"] for j in range(1, nPercobaan+ 1)]
+    for i in range(1, nSilinder + 1):
+        tekanan_values = [float(request.json[f"tekanan{j}s{i}"]) for j in range(1, nPercobaan + 1)]
         tmax = max(tekanan_values)
-        tmean = sum(tekanan_values) / request.json["nPercobaan"]
+        tmean = sum(tekanan_values) / nPercobaan
         result[f"mp{i}"] = tmax
         result[f"mu{i}"] = tmean
 
     return jsonify({
-        'message':'success',
-        'code':200,
-        "data":result,
+        'message': 'success',
+        'code': 200,
+        "data": result,
     })
 
 # Untuk sementara predict menggunakan data dummy
-@app.route("/predict", methods=['GET'])
+@app.route("/predict", methods=['POST'])
 def predict():
     model_save_path = f'model/0db_KFold/model_ann_fold_4.h5'
     trained_model = tf.keras.models.load_model(model_save_path)
@@ -67,6 +127,9 @@ def predict():
         2: 'compression ratio reduction',
         3: 'reduction of amount of fuel injected'
     }
+
+    #get data form
+    data = request.form.getlist('data_item[]')
     
     x = tf.convert_to_tensor([0.989485505, 0.989842059, 0.989769292, 0.989689835, 0.858474522, 0.98955769, 
                               0.973703785, 0.999920595, 0.999897156, 0.998918769, 0.91455455, 0.999916694, 
@@ -82,8 +145,8 @@ def predict():
                               0.226721672, 0.06251139, 0.979988337, 0.25853748, 0.621645889, 0.866603205, 
                               0.689587252, 0.735319815, 0.944162944, 0.396483359, 0.831693689, 0.486495649, 
                               0.917102811, 0.680523642, 0.454790335, 0.058308235])
-    x = tf.expand_dims(x, 0)
-    predicted_classes = trained_model.predict(x).argmax(axis=1)
+    data = tf.expand_dims(x, 0)
+    predicted_classes = trained_model.predict(data).argmax(axis=1)
     
     # Map predictions to class labels
     predicted_labels = [label_dict[pred] for pred in predicted_classes]
@@ -92,6 +155,12 @@ def predict():
         'code':200,
         "data":predicted_labels[0],
     })
+
+# @app.route('/predict', methods=['POST'])
+# def predict():
+#     data = request.form.getlist('data_item[]')  # menerima input sebagai array
+#     # Lakukan sesuatu dengan data
+#     return f"Data yang diterima: {data}"
 
 if __name__ == '__main__':
     app.run(debug=True)

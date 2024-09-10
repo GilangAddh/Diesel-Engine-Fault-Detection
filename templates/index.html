@@ -4,14 +4,166 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Diesel Engine Fault Detection</title>
-        <link rel="stylesheet" href="{{ url_for('static', filename='output.css')}}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/output.css')}}">
+        <!-- Daisy -->
         <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.10/dist/full.min.css" rel="stylesheet" type="text/css">
+        <!-- Googlefont -->
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
     </head>
-    <body>
-        <div class="bg-red-700">
-            <h1 class="text-3xl font-bold">Welcome to My Flask App!</h1>
-            <p>This is the home page.</p>
-        </div>
+    <body class="font-[Poppins]">
+        <header class="bg-[#03AED2] sticky top-0 z-10">
+            <p class="p-4 text-xl text-[#EEF7FF] font-bold">Lorem Ipsum</p>
+        </header>
+        <main class="bg-[#EEF7FF]">
+            <section id="hero">
+                <div class="hero min-h-screen">
+                    <div class="hero-content flex-col lg:flex-row">
+                        <div class="carousel max-w-sm mr-8 pt-10">
+                            <div id="slide1" class="carousel-item relative w-full">
+                                <img src="{{ url_for('static', filename='assets/images/engine1.jpeg')}}" class="rounded-lg shadow-2xl mr-4">
+                                <div class="absolute left-5 right-5 top-1/2 flex -translate-y-1/2 transform justify-between">
+                                    <a href="#slide3" class="btn btn-circle">❮</a>
+                                    <a href="#slide2" class="btn btn-circle">❯</a>
+                                </div>
+                            </div>
+                            <div id="slide2" class="carousel-item relative w-full">
+                                <img src="{{ url_for('static', filename='assets/images/engine2.jpeg')}}" class="rounded-lg shadow-2xl mr-4">
+                                <div class="absolute left-5 right-5 top-1/2 flex -translate-y-1/2 transform justify-between">
+                                    <a href="#slide1" class="btn btn-circle">❮</a>
+                                    <a href="#slide3" class="btn btn-circle">❯</a>
+                                </div>
+                            </div>
+                            <div id="slide3" class="carousel-item relative w-full">
+                                <img src="{{ url_for('static', filename='assets/images/engine3.jpeg')}}" class="rounded-lg shadow-2xl mr-4">
+                                <div class="absolute left-5 right-5 top-1/2 flex -translate-y-1/2 transform justify-between">
+                                    <a href="#slide2" class="btn btn-circle">❮</a>
+                                    <a href="#slide1" class="btn btn-circle">❯</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <h1 class="text-5xl font-bold text-[#03AED2]">Deteksi Kerusakan Mesin Diesel Anda!</h1>
+                            <p class="py-6">
+                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Qui deleniti in, ea eius eos, nesciunt officiis, sapiente minus ipsam hic architecto maxime atque possimus omnis velit! Tenetur recusandae quas nulla in voluptatibus eligendi, soluta magnam labore enim sed nobis officiis aliquam exercitationem dolorum! Sit at eos facilis reiciendis debitis maiores voluptatem eveniet laboriosam suscipit sint ipsam nostrum eaque, assumenda perferendis!
+                            </p>
+                            <button class="btn font-bold bg-[#03AED2] text-white hover:text-[#03AED2] hover:bg-white hover:border-[#03AED2] border-2">Ayo Deteksi</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <section>
+                <div class="p-6 m-6 rounded-lg border-2 border-dashed border-[#03AED2]">
+                    <div class="flex justify-between items-center">
+                        <h2 class="text-2xl font-bold text-[#03AED2]">Deteksi Disini!</h2>
+                        <button class="btn font-bold bg-[#03AED2] text-white hover:text-[#03AED2] hover:bg-white hover:border-[#03AED2] border-2" onclick="importData.showModal()">Import Data</button>
+                        <dialog id="importData" class="modal modal-bottom sm:modal-middle">
+                            <div class="modal-box p-0">
+                                <div class="p-4  bg-[#03AED2] text-white flex items-center justify-between">
+                                    <h3 class="font-bold text-lg text-[22px]">
+                                        Import Data
+                                    </h3>
+                                    <form method="dialog">
+                                        <button class="btn btn-sm btn-circle btn-ghost">
+                                            <i class="fa-solid fa-xmark fa-2xl"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                                <div class="p-8">
+                                    <form method="POST" enctype="multipart/form-data" action="">
+                                        <div class="gap-6 mb-4">
+                                            <div class="flex items-center w-full mb-4">
+                                                <label class="form-control w-full">
+                                                    <div class="label">
+                                                        <span class="label-text text-[16px]">Import File Excel</span>
+                                                    </div>
+                                                    <input type="file" class="file-input file-input-bordered w-full">
+                                                    <div class="label flex justify-end">
+                                                        <a href="{{ url_for('static', filename='assets/file/template.xlsx') }}" class="text-blue-400 hover:!text-blue-900">Unduh Template Disini!</a>
+                                                    </div>
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="modal-action">
+                                            <button type="submit" class="btn bg-[#03AED2] text-white hover:text-[#03AED2] hover:bg-white hover:border-[#03AED2] border-2">Terapkan</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </dialog>
+                    </div>
+                    <form action="/predict" method="POST">
+                        {% for section_item in section %}
+                        <div class="my-8 p-4 border-2 border-[#03AED2] rounded-md">
+                            <h3 class="text-xl font-bold text-[#03AED2]">{{ section_item.name }}</h3>
+                            <!-- <div class="flex my-4 flex-wrap gap-4">
+                            <label class="form-control w-full max-w-xs">
+                                <div class="label">
+                                    <span class="label-text">Cylinder 1</span>
+                                </div>
+                                <input type="text" placeholder="Cylinder 1" class="input input-bordered w-full max-w-xs">
+                            </label>
+                            <label class="form-control w-full max-w-xs">
+                                <div class="label">
+                                    <span class="label-text">Cylinder 2</span>
+                                </div>
+                                <input type="text" placeholder="Cylinder 2" class="input input-bordered w-full max-w-xs">
+                            </label>
+                            <label class="form-control w-full max-w-xs">
+                                <div class="label">
+                                    <span class="label-text">Cylinder 3</span>
+                                </div>
+                                <input type="text" placeholder="Cylinder 3" class="input input-bordered w-full max-w-xs">
+                            </label>
+                            <label class="form-control w-full max-w-xs">
+                                <div class="label">
+                                    <span class="label-text">Cylinder 4</span>
+                                </div>
+                                <input type="text" placeholder="Cylinder 4" class="input input-bordered w-full max-w-xs">
+                            </label>
+                            <label class="form-control w-full max-w-xs">
+                                <div class="label">
+                                    <span class="label-text">Cylinder 5</span>
+                                </div>
+                                <input type="text" placeholder="Cylinder 5" class="input input-bordered w-full max-w-xs">
+                            </label>
+                            <label class="form-control w-full max-w-xs">
+                                <div class="label">
+                                    <span class="label-text">Cylinder 6</span>
+                                </div>
+                                <input type="text" placeholder="Cylinder 6" class="input input-bordered w-full max-w-xs">
+                            </label>
+                        </div> -->
+                            <div class="flex my-4 flex-wrap gap-4 justify-between">
+                                {% for data_item in section_item.label %}
+                                <label class="form-control w-full max-w-[14rem]">
+                                    <div class="label">
+                                        <span class="label-text">{{data_item }}</span>
+                                    </div>
+                                    <input
+                                        type="text"
+                                        inputmode="numeric"
+                                        placeholder="{{data_item}}"
+                                        class="input input-bordered w-full "
+                                        name="data_item[]"
+                                        value="0.5"
+                                    >
+                                </label>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        {% endfor %}
+                        <button type="submit" class="btn text-[18px] font-bold bg-[#03AED2] text-white hover:text-[#03AED2] hover:bg-white hover:border-[#03AED2] border-2 w-full">Deteksi</button>
+                    </form>
+                </div>
+            </section>
+        </main>
+        <footer class="bg-[#03AED2]">
+            <p class="text-center p-4 text-xl text-[#EEF7FF] font-bold">Copyright@2024</p>
+            <h2 class="text-2xl font-semibold">{{ item }}</h2>
+        </footer>
         <script src="https://cdn.tailwindcss.com"></script>
+        <script src="https://kit.fontawesome.com/3cfd8eaa87.js" crossorigin="anonymous"></script>
     </body>
 </html>
