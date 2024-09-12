@@ -14,7 +14,7 @@
     </head>
     <body class="font-[Poppins]">
         <header class="bg-[#03AED2] sticky top-0 z-10">
-            <p class="p-4 text-xl text-[#EEF7FF] font-bold">Lorem Ipsum</p>
+            <p class="p-4 text-2xl text-[#EEF7FF] font-bold">Diesel Diagnosys</p>
         </header>
         <main class="bg-[#EEF7FF]">
             <section id="hero">
@@ -22,14 +22,14 @@
                     <div class="hero-content flex-col lg:flex-row">
                         <div class="carousel max-w-sm mr-8 pt-10">
                             <div id="slide1" class="carousel-item relative w-full">
-                                <img src="{{ url_for('static', filename='assets/images/engine1.jpeg')}}" class="rounded-lg shadow-2xl mr-4">
+                                <img src="{{ url_for('static', filename='assets/images/engine1.jpg')}}" class="rounded-lg shadow-2xl mr-4">
                                 <div class="absolute left-5 right-5 top-1/2 flex -translate-y-1/2 transform justify-between">
                                     <a href="#slide3" class="btn btn-circle">❮</a>
                                     <a href="#slide2" class="btn btn-circle">❯</a>
                                 </div>
                             </div>
                             <div id="slide2" class="carousel-item relative w-full">
-                                <img src="{{ url_for('static', filename='assets/images/engine2.jpeg')}}" class="rounded-lg shadow-2xl mr-4">
+                                <img src="{{ url_for('static', filename='assets/images/engine2.jpg')}}" class="rounded-lg shadow-2xl mr-4">
                                 <div class="absolute left-5 right-5 top-1/2 flex -translate-y-1/2 transform justify-between">
                                     <a href="#slide1" class="btn btn-circle">❮</a>
                                     <a href="#slide3" class="btn btn-circle">❯</a>
@@ -93,48 +93,10 @@
                             </div>
                         </dialog>
                     </div>
-                    <form action="/predict" method="POST">
+                    <form id="predictForm">
                         {% for section_item in section %}
                         <div class="my-8 p-4 border-2 border-[#03AED2] rounded-md">
                             <h3 class="text-xl font-bold text-[#03AED2]">{{ section_item.name }}</h3>
-                            <!-- <div class="flex my-4 flex-wrap gap-4">
-                            <label class="form-control w-full max-w-xs">
-                                <div class="label">
-                                    <span class="label-text">Cylinder 1</span>
-                                </div>
-                                <input type="text" placeholder="Cylinder 1" class="input input-bordered w-full max-w-xs">
-                            </label>
-                            <label class="form-control w-full max-w-xs">
-                                <div class="label">
-                                    <span class="label-text">Cylinder 2</span>
-                                </div>
-                                <input type="text" placeholder="Cylinder 2" class="input input-bordered w-full max-w-xs">
-                            </label>
-                            <label class="form-control w-full max-w-xs">
-                                <div class="label">
-                                    <span class="label-text">Cylinder 3</span>
-                                </div>
-                                <input type="text" placeholder="Cylinder 3" class="input input-bordered w-full max-w-xs">
-                            </label>
-                            <label class="form-control w-full max-w-xs">
-                                <div class="label">
-                                    <span class="label-text">Cylinder 4</span>
-                                </div>
-                                <input type="text" placeholder="Cylinder 4" class="input input-bordered w-full max-w-xs">
-                            </label>
-                            <label class="form-control w-full max-w-xs">
-                                <div class="label">
-                                    <span class="label-text">Cylinder 5</span>
-                                </div>
-                                <input type="text" placeholder="Cylinder 5" class="input input-bordered w-full max-w-xs">
-                            </label>
-                            <label class="form-control w-full max-w-xs">
-                                <div class="label">
-                                    <span class="label-text">Cylinder 6</span>
-                                </div>
-                                <input type="text" placeholder="Cylinder 6" class="input input-bordered w-full max-w-xs">
-                            </label>
-                        </div> -->
                             <div class="flex my-4 flex-wrap gap-4 justify-between">
                                 {% for data_item in section_item.label %}
                                 <label class="form-control w-full max-w-[14rem]">
@@ -146,7 +108,7 @@
                                         inputmode="numeric"
                                         placeholder="{{data_item}}"
                                         class="input input-bordered w-full "
-                                        name="data_item[]"
+                                        name="data_item"
                                         value="0.5"
                                     >
                                 </label>
@@ -158,6 +120,20 @@
                     </form>
                 </div>
             </section>
+            <input type="checkbox" id="my-modal" class="modal-toggle">
+            <div class="modal">
+                <div class="modal-box p-0">
+                    <div class="bg-[#03AED2] p-4">
+                        <h3 class="font-bold text-lg text-white">Prediction Result</h3>
+                    </div>
+                    <div class="p-4">
+                        <p id="predictionOutput" class="py-4"></p>
+                    </div>
+                    <div class="modal-action mb-4 mr-4">
+                        <label for="my-modal" class="btn">Close</label>
+                    </div>
+                </div>
+            </div>
         </main>
         <footer class="bg-[#03AED2]">
             <p class="text-center p-4 text-xl text-[#EEF7FF] font-bold">Copyright@2024</p>
@@ -165,5 +141,40 @@
         </footer>
         <script src="https://cdn.tailwindcss.com"></script>
         <script src="https://kit.fontawesome.com/3cfd8eaa87.js" crossorigin="anonymous"></script>
+        <script>
+            document.getElementById('predictForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+        
+                const formData = new FormData(this);
+                const data = {};
+                
+                formData.forEach((value, key) => {
+                    if (!data[key]) {
+                        data[key] = [];
+                    }
+                    data[key].push(parseFloat(value));
+                });        
+                console.log(data)
+                fetch('/predict', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data),
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data)
+                    // Isi modal dengan hasil prediksi
+                    document.getElementById('predictionOutput').textContent = `Prediction: ${data.data}`;
+                    
+                    // Tampilkan modal
+                    document.getElementById('my-modal').checked = true;
+                })
+                .catch((error) => {
+                    console.error('Error:', error);
+                });
+            });
+        </script>
     </body>
 </html>
