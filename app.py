@@ -144,13 +144,14 @@ def predict():
     #                           0.689587252, 0.735319815, 0.944162944, 0.396483359, 0.831693689, 0.486495649, 
     #                           0.917102811, 0.680523642, 0.454790335, 0.058308235])
     
-    data = request.form.getlist('data_item[]')
-    data = [float(item) for item in data]
+    data = request.get_json()
+    data_items = data.get('data_item', [])
+    data_float = [float(item) for item in data_items]
 
-    x = tf.convert_to_tensor(data, dtype=tf.float32)
+    x = tf.convert_to_tensor(data_float, dtype=tf.float32)
     
-    data = tf.expand_dims(x, 0)
-    predicted_classes = trained_model.predict(data).argmax(axis=1)
+    data_tf = tf.expand_dims(x, 0)
+    predicted_classes = trained_model.predict(data_tf).argmax(axis=1)
     
     # Map predictions to class labels
     predicted_labels = [label_dict[pred] for pred in predicted_classes]
