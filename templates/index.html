@@ -20,35 +20,16 @@
             <section id="hero">
                 <div class="hero min-h-screen">
                     <div class="hero-content flex-col lg:flex-row">
-                        <div class="carousel max-w-sm mr-8 pt-10">
-                            <div id="slide1" class="carousel-item relative w-full">
-                                <img src="{{ url_for('static', filename='assets/images/engine1.jpg')}}" class="rounded-lg shadow-2xl mr-4">
-                                <div class="absolute left-5 right-5 top-1/2 flex -translate-y-1/2 transform justify-between">
-                                    <a href="#slide3" class="btn btn-circle">❮</a>
-                                    <a href="#slide2" class="btn btn-circle">❯</a>
-                                </div>
-                            </div>
-                            <div id="slide2" class="carousel-item relative w-full">
-                                <img src="{{ url_for('static', filename='assets/images/engine2.jpg')}}" class="rounded-lg shadow-2xl mr-4">
-                                <div class="absolute left-5 right-5 top-1/2 flex -translate-y-1/2 transform justify-between">
-                                    <a href="#slide1" class="btn btn-circle">❮</a>
-                                    <a href="#slide3" class="btn btn-circle">❯</a>
-                                </div>
-                            </div>
-                            <div id="slide3" class="carousel-item relative w-full">
-                                <img src="{{ url_for('static', filename='assets/images/engine3.jpeg')}}" class="rounded-lg shadow-2xl mr-4">
-                                <div class="absolute left-5 right-5 top-1/2 flex -translate-y-1/2 transform justify-between">
-                                    <a href="#slide2" class="btn btn-circle">❮</a>
-                                    <a href="#slide1" class="btn btn-circle">❯</a>
-                                </div>
-                            </div>
-                        </div>
+                        <img src="{{ url_for('static', filename='assets/images/engine1.jpg')}}" class="max-w-sm rounded-lg shadow-2xl">
                         <div>
-                            <h1 class="text-5xl font-bold text-[#03AED2]">Deteksi Kerusakan Mesin Diesel Anda!</h1>
-                            <p class="py-6">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Qui deleniti in, ea eius eos, nesciunt officiis, sapiente minus ipsam hic architecto maxime atque possimus omnis velit! Tenetur recusandae quas nulla in voluptatibus eligendi, soluta magnam labore enim sed nobis officiis aliquam exercitationem dolorum! Sit at eos facilis reiciendis debitis maiores voluptatem eveniet laboriosam suscipit sint ipsam nostrum eaque, assumenda perferendis!
-                            </p>
-                            <button class="btn font-bold bg-[#03AED2] text-white hover:text-[#03AED2] hover:bg-white hover:border-[#03AED2] border-2">Ayo Deteksi</button>
+                            <div>
+                                <h1 class="text-5xl font-bold text-[#03AED2]">Deteksi Kerusakan Mesin Diesel Anda!</h1>
+                                <p class="py-6">
+                                    Aplikasi yang dirancang dan dibangun untuk menampilkan hasil prediksi kerusakan mesin diesel dengan
+                                    menerima data sinyal mesin. Data yang diinputkan berjumlah 84 data yang terbagi menjadi 6 data Tekanan Maksimal, 6 data Tekanan Rata-Rata, 24 data Frekuensi, 24 data Amplitude dan 24 data Gerakan Harmoni.
+                                </p>
+                                <button class="btn font-bold bg-[#03AED2] text-white hover:text-[#03AED2] hover:bg-white hover:border-[#03AED2] border-2">Ayo Deteksi</button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -71,23 +52,17 @@
                                     </form>
                                 </div>
                                 <div class="p-8">
-                                    <form method="POST" enctype="multipart/form-data" action="">
-                                        <div class="gap-6 mb-4">
-                                            <div class="flex items-center w-full mb-4">
-                                                <label class="form-control w-full">
-                                                    <div class="label">
-                                                        <span class="label-text text-[16px]">Import File Excel</span>
-                                                    </div>
-                                                    <input type="file" class="file-input file-input-bordered w-full">
-                                                    <div class="label flex justify-end">
-                                                        <a href="{{ url_for('static', filename='assets/file/template.xlsx') }}" class="text-blue-400 hover:!text-blue-900">Unduh Template Disini!</a>
-                                                    </div>
-                                                </label>
+                                    <form id="excelForm" method="POST" enctype="multipart/form-data">
+                                        <label class="form-control w-full">
+                                            <div class="label">
+                                                <span class="label-text text-[16px]">Import File Excel</span>
                                             </div>
-                                        </div>
-                                        <div class="modal-action">
-                                            <button type="submit" class="btn bg-[#03AED2] text-white hover:text-[#03AED2] hover:bg-white hover:border-[#03AED2] border-2">Terapkan</button>
-                                        </div>
+                                            <input type="file" id="excelFile" class="file-input file-input-bordered w-full">
+                                            <div class="label flex justify-end">
+                                                <a href="{{ url_for('static', filename='assets/file/template.xlsx') }}" class="text-blue-400 hover:!text-blue-900">Unduh Template Disini!</a>
+                                            </div>
+                                        </label>
+                                        <button type="button" id="uploadBtn" class="btn bg-[#03AED2] text-white">Terapkan</button>
                                     </form>
                                 </div>
                             </div>
@@ -98,25 +73,27 @@
                         <div class="my-8 p-4 border-2 border-[#03AED2] rounded-md">
                             <h3 class="text-xl font-bold text-[#03AED2]">{{ section_item.name }}</h3>
                             <div class="flex my-4 flex-wrap gap-4 justify-between">
-                                {% for data_item in section_item.label %}
+                                {% for index in range(section_item.label|length) %}
                                 <label class="form-control w-full max-w-[14rem]">
                                     <div class="label">
-                                        <span class="label-text">{{data_item }}</span>
+                                        <span class="label-text">{{ section_item.label[index] }}</span>
                                     </div>
                                     <input
                                         type="text"
                                         inputmode="numeric"
-                                        placeholder="{{data_item}}"
-                                        class="input input-bordered w-full "
+                                        placeholder="{{ section_item.label[index] }}"
+                                        class="input input-bordered w-full"
+                                        id="{{ section_item.input[index] }}"
+                                        required
                                         name="data_item"
-                                        value="0.5"
                                     >
                                 </label>
                                 {% endfor %}
                             </div>
                         </div>
                         {% endfor %}
-                        <button type="submit" class="btn text-[18px] font-bold bg-[#03AED2] text-white hover:text-[#03AED2] hover:bg-white hover:border-[#03AED2] border-2 w-full">Deteksi</button>
+                        <button type="reset" class="btn bg-red-400 text-[18px] font-bold text-white hover:text-red-400 hover:bg-white hover:border-red-400 hover:border-2">Hapus</button>
+                        <button type="submit" class="btn text-[18px] font-bold bg-[#03AED2] text-white hover:text-[#03AED2] hover:bg-white hover:border-[#03AED2] border-2">Deteksi</button>
                     </form>
                 </div>
             </section>
@@ -141,6 +118,7 @@
         </footer>
         <script src="https://cdn.tailwindcss.com"></script>
         <script src="https://kit.fontawesome.com/3cfd8eaa87.js" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
         <script>
             document.getElementById('predictForm').addEventListener('submit', function(e) {
                 e.preventDefault();
@@ -174,6 +152,39 @@
                 .catch((error) => {
                     console.error('Error:', error);
                 });
+            });
+            document.getElementById('uploadBtn').addEventListener('click', () => {
+                const fileInput = document.getElementById('excelFile');
+                const file = fileInput.files[0];
+
+                if (file) {
+                    const reader = new FileReader();
+
+                    reader.onload = function(e) {
+                        const data = new Uint8Array(e.target.result);
+                        const workbook = XLSX.read(data, { type: 'array' });
+
+                        // Ambil data dari sheet pertama
+                        const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
+                        const jsonData = XLSX.utils.sheet_to_json(firstSheet, { header: 1 });
+
+                        // Misal data ada di baris pertama
+                        const headers = jsonData[0];
+                        const values = jsonData[1];
+
+                        // Isi input berdasarkan header dan nilai
+                        headers.forEach((header, index) => {
+                            const inputElement = document.getElementById(header);
+                            if (inputElement) {
+                                inputElement.value = values[index] || '';
+                            }
+                        });
+                    };
+
+                    reader.readAsArrayBuffer(file);
+                } else {
+                    console.log('No file selected');
+                }
             });
         </script>
     </body>
