@@ -93,7 +93,7 @@
                             </div>
                         </dialog>
                     </div>
-                    <form action="/predict" method="POST" id="predictForm">
+                    <form id="predictForm">
                         {% for section_item in section %}
                         <div class="my-8 p-4 border-2 border-[#03AED2] rounded-md">
                             <h3 class="text-xl font-bold text-[#03AED2]">{{ section_item.name }}</h3>
@@ -108,7 +108,7 @@
                                         inputmode="numeric"
                                         placeholder="{{data_item}}"
                                         class="input input-bordered w-full "
-                                        name="data_item[]"
+                                        name="data_item"
                                         value="0.5"
                                     >
                                 </label>
@@ -124,7 +124,7 @@
             <div class="modal">
                 <div class="modal-box p-0">
                     <div class="bg-[#03AED2] p-4">
-                        <h3 class="font-bold text-lg">Prediction Result</h3>
+                        <h3 class="font-bold text-lg text-white">Prediction Result</h3>
                     </div>
                     <div class="p-4">
                         <p id="predictionOutput" class="py-4"></p>
@@ -142,18 +142,29 @@
         <script src="https://cdn.tailwindcss.com"></script>
         <script src="https://kit.fontawesome.com/3cfd8eaa87.js" crossorigin="anonymous"></script>
         <script>
-            document.getElementById('predictForm').addEventListener('submit', function(event) {
-                event.preventDefault();  // Mencegah refresh halaman
-    
+            document.getElementById('predictForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+        
+                const formData = new FormData(this);
+                const data = {};
+                
+                formData.forEach((value, key) => {
+                    if (!data[key]) {
+                        data[key] = [];
+                    }
+                    data[key].push(parseFloat(value));
+                });        
+                console.log(data)
                 fetch('/predict', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify({}),  // Kirim data jika diperlukan
+                    body: JSON.stringify(data),
                 })
                 .then(response => response.json())
                 .then(data => {
+                    console.log(data)
                     // Isi modal dengan hasil prediksi
                     document.getElementById('predictionOutput').textContent = `Prediction: ${data.data}`;
                     
