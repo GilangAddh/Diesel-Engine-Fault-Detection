@@ -153,7 +153,7 @@ def predict():
     else:
         return jsonify({'message': 'Invalid input', 'code': 400})
 
-    x = tf.convert_to_tensor(data_float, dtype=tf.float32)
+    x = tf.convert_to_tensor(data, dtype=tf.float32)
     
     data_tf = tf.expand_dims(x, 0)
     predicted_classes = trained_model.predict(data_tf).argmax(axis=1)
