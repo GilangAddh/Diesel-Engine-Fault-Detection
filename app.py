@@ -144,9 +144,14 @@ def predict():
     #                           0.689587252, 0.735319815, 0.944162944, 0.396483359, 0.831693689, 0.486495649, 
     #                           0.917102811, 0.680523642, 0.454790335, 0.058308235])
     
-    data = request.get_json()
-    data_items = data.get('data_item', [])
-    data_float = [float(item) for item in data_items]
+    data = request.json
+    print("Received data:", data)
+    data = data.get('data_item', [])
+
+    if isinstance(data, list):
+            data = [float(item) for item in data]
+    else:
+        return jsonify({'message': 'Invalid input', 'code': 400})
 
     x = tf.convert_to_tensor(data_float, dtype=tf.float32)
     
