@@ -6,9 +6,6 @@ import numpy as np
 app = Flask(__name__)
 CORS(app)
 
-model_path = 'model/model.onnx'
-session = ort.InferenceSession(model_path)
-    
 @app.route('/')
 def home():
     section = [
@@ -71,7 +68,9 @@ def home():
             ]
         }
     ]
-    return render_template('index.html', section=section)
+    
+    isDebug = 'true'
+    return render_template('index.html', section=section, isDebug=isDebug)
 
 @app.route("/predict", methods=['POST'])
 def predict():
@@ -92,6 +91,17 @@ def predict():
 
     
     data = np.expand_dims(data, axis=0) 
+    
+    # Set session options to limit threads and disable parallel execution
+    session_options = ort.SessionOptions()
+    session_options.intra_op_num_threads = 1  # Limit the number of threads for parallel execution
+    session_options.inter_op_num_threads = 1  # Limit threads between operators
+    session_options.execution_mode = ort.ExecutionMode.ORT_SEQUENTIAL  # Disable parallel execution
+
+    # Load ONNX model with session options
+    model_path = 'model/model.onnx'
+    session = ort.InferenceSession(model_path, sess_options=session_options)
+        
     
     input_name = session.get_inputs()[0].name
     result = session.run(None, {input_name: data})
