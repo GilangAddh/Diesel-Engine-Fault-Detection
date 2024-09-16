@@ -1,191 +1,211 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Diesel Engine Fault Detection</title>
-        <link rel="stylesheet" href="{{ url_for('static', filename='css/output.css')}}">
-        <!-- Daisy -->
-        <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.10/dist/full.min.css" rel="stylesheet" type="text/css">
-        <!-- Googlefont -->
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
-    </head>
-    <body class="font-[Poppins]">
-        <header class="bg-[#03AED2] sticky top-0 z-10">
-            <p class="p-4 text-2xl text-[#EEF7FF] font-bold">Diesel Diagnosys</p>
-        </header>
-        <main class="bg-[#EEF7FF]">
-            <section id="hero">
-                <div class="hero min-h-screen">
-                    <div class="hero-content flex-col lg:flex-row">
-                        <img src="{{ url_for('static', filename='assets/images/engine1.jpg')}}" class="max-w-sm rounded-lg shadow-2xl">
-                        <div>
-                            <div>
-                                <h1 class="text-5xl font-bold text-[#03AED2]">Deteksi Kerusakan Mesin Diesel Anda!</h1>
-                                <p class="py-6">
-                                    Aplikasi yang dirancang dan dibangun untuk menampilkan hasil prediksi kerusakan mesin diesel dengan
-                                    menerima data sinyal mesin. Data yang diinputkan berjumlah 84 data yang terbagi menjadi 6 data Tekanan Maksimal, 6 data Tekanan Rata-Rata, 24 data Frekuensi, 24 data Amplitude dan 24 data Gerakan Harmoni.
-                                </p>
-                                <button class="btn font-bold bg-[#03AED2] text-white hover:text-[#03AED2] hover:bg-white hover:border-[#03AED2] border-2">Ayo Deteksi</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-            <section>
-                <div class="p-6 m-6 rounded-lg border-2 border-dashed border-[#03AED2]">
-                    <div class="flex justify-between items-center">
-                        <h2 class="text-2xl font-bold text-[#03AED2]">Deteksi Disini!</h2>
-                        <button class="btn font-bold bg-[#03AED2] text-white hover:text-[#03AED2] hover:bg-white hover:border-[#03AED2] border-2" onclick="importData.showModal()">Import Data</button>
-                        <dialog id="importData" class="modal modal-bottom sm:modal-middle">
-                            <div class="modal-box p-0">
-                                <div class="p-4  bg-[#03AED2] text-white flex items-center justify-between">
-                                    <h3 class="font-bold text-lg text-[22px]">
-                                        Import Data
-                                    </h3>
-                                    <form method="dialog">
-                                        <button class="btn btn-sm btn-circle btn-ghost">
-                                            <i class="fa-solid fa-xmark fa-2xl"></i>
-                                        </button>
-                                    </form>
-                                </div>
-                                <div class="p-8">
-                                    <form id="excelForm" method="POST" enctype="multipart/form-data">
-                                        <label class="form-control w-full">
-                                            <div class="label">
-                                                <span class="label-text text-[16px]">Import File Excel</span>
-                                            </div>
-                                            <input type="file" id="excelFile" class="file-input file-input-bordered w-full">
-                                            <div class="label flex justify-end">
-                                                <a href="{{ url_for('static', filename='assets/file/template.xlsx') }}" class="text-blue-400 hover:!text-blue-900">Unduh Template Disini!</a>
-                                            </div>
-                                        </label>
-                                        <button type="button" id="uploadBtn" class="btn bg-[#03AED2] text-white">Terapkan</button>
-                                    </form>
-                                </div>
-                            </div>
-                        </dialog>
-                    </div>
-                    <form id="predictForm">
-                        {% for section_item in section %}
-                        <div class="my-8 p-4 border-2 border-[#03AED2] rounded-md">
-                            <h3 class="text-xl font-bold text-[#03AED2]">{{ section_item.name }}</h3>
-                            <div class="flex my-4 flex-wrap gap-4 justify-between">
-                                {% for index in range(section_item.label|length) %}
-                                <label class="form-control w-full max-w-[14rem]">
-                                    <div class="label">
-                                        <span class="label-text">{{ section_item.label[index] }}</span>
-                                    </div>
-                                    <input
-                                        type="text"
-                                        inputmode="numeric"
-                                        placeholder="{{ section_item.label[index] }}"
-                                        class="input input-bordered w-full"
-                                        id="{{ section_item.input[index] }}"
-                                        required
-                                        name="data_item"
-                                    >
-                                </label>
-                                {% endfor %}
-                            </div>
-                        </div>
-                        {% endfor %}
-                        <button type="reset" class="btn bg-red-400 text-[18px] font-bold text-white hover:text-red-400 hover:bg-white hover:border-red-400 hover:border-2">Hapus</button>
-                        <button type="submit" class="btn text-[18px] font-bold bg-[#03AED2] text-white hover:text-[#03AED2] hover:bg-white hover:border-[#03AED2] border-2">Deteksi</button>
-                    </form>
-                </div>
-            </section>
-            <input type="checkbox" id="my-modal" class="modal-toggle">
-            <div class="modal">
-                <div class="modal-box p-0">
-                    <div class="bg-[#03AED2] p-4">
-                        <h3 class="font-bold text-lg text-white">Prediction Result</h3>
-                    </div>
-                    <div class="p-4">
-                        <p id="predictionOutput" class="py-4"></p>
-                    </div>
-                    <div class="modal-action mb-4 mr-4">
-                        <label for="my-modal" class="btn">Close</label>
-                    </div>
-                </div>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Diesel Engine Fault Detection</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/output.css')}}" />
+    <!-- Daisy -->
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.10/dist/full.min.css" rel="stylesheet" type="text/css" />
+    <!-- Googlefont -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+      rel="stylesheet" />
+  </head>
+  <body class="font-[Poppins]">
+    <header class="bg-[#03AED2] sticky top-0 z-10">
+      <p class="p-4 text-2xl text-[#EEF7FF] font-bold">Diesel Diagnosys</p>
+    </header>
+    <main class="bg-[#EEF7FF]">
+      <section id="hero">
+        <div class="min-h-screen hero">
+          <div class="flex-col hero-content lg:flex-row">
+            <img
+              src="{{ url_for('static', filename='assets/images/engine1.jpg')}}"
+              class="max-w-sm rounded-lg shadow-2xl" />
+            <div>
+              <div>
+                <h1 class="text-5xl font-bold text-[#03AED2]">Deteksi Kerusakan Mesin Diesel Anda!</h1>
+                <p class="py-6">
+                  Aplikasi yang dirancang dan dibangun untuk menampilkan hasil prediksi kerusakan mesin diesel dengan
+                  menerima data sinyal mesin. Data yang diinputkan berjumlah 84 data yang terbagi menjadi 6 data Tekanan
+                  Maksimal, 6 data Tekanan Rata-Rata, 24 data Frekuensi, 24 data Amplitude dan 24 data Gerakan Harmoni.
+                </p>
+                <button
+                  class="btn font-bold bg-[#03AED2] text-white hover:text-[#03AED2] hover:bg-white hover:border-[#03AED2] border-2">
+                  Ayo Deteksi
+                </button>
+              </div>
             </div>
-        </main>
-        <footer class="bg-[#03AED2]">
-            <p class="text-center p-4 text-xl text-[#EEF7FF] font-bold">Copyright@2024</p>
-            <h2 class="text-2xl font-semibold">{{ item }}</h2>
-        </footer>
-        <script src="https://cdn.tailwindcss.com"></script>
-        <script src="https://kit.fontawesome.com/3cfd8eaa87.js" crossorigin="anonymous"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-        <script>
-            document.getElementById('predictForm').addEventListener('submit', function(e) {
-                e.preventDefault();
-        
-                const formData = new FormData(this);
-                const data = {};
-                
-                formData.forEach((value, key) => {
-                    if (!data[key]) {
-                        data[key] = [];
-                    }
-                    data[key].push(parseFloat(value));
-                });        
-                console.log(data)
-                fetch('/predict', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(data),
-                })
-                .then(response => response.json())
-                .then(data => {
-                    console.log(data)
-                    // Isi modal dengan hasil prediksi
-                    document.getElementById('predictionOutput').textContent = `Prediction: ${data.data}`;
-                    
-                    // Tampilkan modal
-                    document.getElementById('my-modal').checked = true;
-                })
-                .catch((error) => {
-                    console.error('Error:', error);
-                });
-            });
-            document.getElementById('uploadBtn').addEventListener('click', () => {
-                const fileInput = document.getElementById('excelFile');
-                const file = fileInput.files[0];
+          </div>
+        </div>
+      </section>
+      <section>
+        <div class="p-6 m-6 rounded-lg border-2 border-dashed border-[#03AED2]">
+          <div class="flex items-center justify-between">
+            <h2 class="text-2xl font-bold text-[#03AED2]">Deteksi Disini!</h2>
+            <button
+              class="btn font-bold bg-[#03AED2] text-white hover:text-[#03AED2] hover:bg-white hover:border-[#03AED2] border-2"
+              onclick="importData.showModal()">
+              Import Data
+            </button>
+            <dialog id="importData" class="modal modal-bottom sm:modal-middle">
+              <div class="p-0 modal-box">
+                <div class="p-4 bg-[#03AED2] text-white flex items-center justify-between">
+                  <h3 class="font-bold text-lg text-[22px]">Import Data</h3>
+                  <form method="dialog">
+                    <button class="btn btn-sm btn-circle btn-ghost">
+                      <i class="fa-solid fa-xmark fa-2xl"></i>
+                    </button>
+                  </form>
+                </div>
+                <div class="p-8">
+                  <form id="excelForm" method="POST" enctype="multipart/form-data">
+                    <label class="w-full form-control">
+                      <div class="label">
+                        <span class="label-text text-[16px]">Import File Excel</span>
+                      </div>
+                      <input type="file" id="excelFile" class="w-full file-input file-input-bordered" />
+                      <div class="flex justify-end label">
+                        <a
+                          href="{{ url_for('static', filename='assets/file/template.xlsx') }}"
+                          class="text-blue-400 hover:!text-blue-900"
+                          >Unduh Template Disini!</a
+                        >
+                      </div>
+                    </label>
+                    <button type="button" id="uploadBtn" class="btn bg-[#03AED2] text-white">Terapkan</button>
+                  </form>
+                </div>
+              </div>
+            </dialog>
+          </div>
+          <form id="predictForm">
+            {% for section_item in section %}
+            <div class="my-8 p-4 border-2 border-[#03AED2] rounded-md">
+              <h3 class="text-xl font-bold text-[#03AED2]">{{ section_item.name }}</h3>
+              <div class="flex flex-wrap justify-between gap-4 my-4">
+                {% for index in range(section_item.label|length) %}
+                <label class="form-control w-full max-w-[14rem]">
+                  <div class="label">
+                    <span class="label-text">{{ section_item.label[index] }}</span>
+                  </div>
+                  <input
+                    type="text"
+                    inputmode="numeric"
+                    placeholder="{{ section_item.label[index] }}"
+                    class="w-full input input-bordered"
+                    id="{{ section_item.input[index] }}"
+                    required
+                    name="data_item" />
+                </label>
+                {% endfor %}
+              </div>
+            </div>
+            {% endfor %}
+            <button
+              type="reset"
+              class="btn bg-red-400 text-[18px] font-bold text-white hover:text-red-400 hover:bg-white hover:border-red-400 hover:border-2">
+              Hapus
+            </button>
+            <button
+              type="submit"
+              class="btn text-[18px] font-bold bg-[#03AED2] text-white hover:text-[#03AED2] hover:bg-white hover:border-[#03AED2] border-2">
+              Deteksi
+            </button>
+          </form>
+        </div>
+      </section>
+      <input type="checkbox" id="my-modal" class="modal-toggle" />
+      <div class="modal">
+        <div class="p-0 modal-box">
+          <div class="bg-[#03AED2] p-4">
+            <h3 class="text-lg font-bold text-white">Prediction Result</h3>
+          </div>
+          <div class="p-4">
+            <p id="predictionOutput" class="py-4"></p>
+          </div>
+          <div class="mb-4 mr-4 modal-action">
+            <label for="my-modal" class="btn">Close</label>
+          </div>
+        </div>
+      </div>
+    </main>
+    <footer class="bg-[#03AED2]">
+      <p class="text-center p-4 text-xl text-[#EEF7FF] font-bold">Copyright@2024</p>
+      <h2 class="text-2xl font-semibold">{{ item }}</h2>
+    </footer>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://kit.fontawesome.com/3cfd8eaa87.js" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script>
+      const isDebug = '{{isDebug}}'
+      const predictLink = isDebug === 'true' ? '/predict' : '/detection/predict'
 
-                if (file) {
-                    const reader = new FileReader();
+      document.getElementById('predictForm').addEventListener('submit', function (e) {
+        e.preventDefault()
 
-                    reader.onload = function(e) {
-                        const data = new Uint8Array(e.target.result);
-                        const workbook = XLSX.read(data, { type: 'array' });
+        const formData = new FormData(this)
+        const data = {}
 
-                        // Ambil data dari sheet pertama
-                        const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
-                        const jsonData = XLSX.utils.sheet_to_json(firstSheet, { header: 1 });
+        formData.forEach((value, key) => {
+          if (!data[key]) {
+            data[key] = []
+          }
+          data[key].push(parseFloat(value))
+        })
 
-                        // Misal data ada di baris pertama
-                        const headers = jsonData[0];
-                        const values = jsonData[1];
+        fetch(predictLink, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(data)
+        })
+          .then(response => response.json())
+          .then(data => {
+            document.getElementById('predictionOutput').textContent = `Prediction: ${data.data}`
+            document.getElementById('my-modal').checked = true
+          })
+          .catch(error => {
+            console.error('Error:', error)
+          })
+      })
+      document.getElementById('uploadBtn').addEventListener('click', () => {
+        const fileInput = document.getElementById('excelFile')
+        const file = fileInput.files[0]
 
-                        // Isi input berdasarkan header dan nilai
-                        headers.forEach((header, index) => {
-                            const inputElement = document.getElementById(header);
-                            if (inputElement) {
-                                inputElement.value = values[index] || '';
-                            }
-                        });
-                    };
+        if (file) {
+          const reader = new FileReader()
 
-                    reader.readAsArrayBuffer(file);
-                } else {
-                    console.log('No file selected');
-                }
-            });
-        </script>
-    </body>
+          reader.onload = function (e) {
+            const data = new Uint8Array(e.target.result)
+            const workbook = XLSX.read(data, { type: 'array' })
+
+            // Ambil data dari sheet pertama
+            const firstSheet = workbook.Sheets[workbook.SheetNames[0]]
+            const jsonData = XLSX.utils.sheet_to_json(firstSheet, { header: 1 })
+
+            // Misal data ada di baris pertama
+            const headers = jsonData[0]
+            const values = jsonData[1]
+
+            // Isi input berdasarkan header dan nilai
+            headers.forEach((header, index) => {
+              const inputElement = document.getElementById(header)
+              if (inputElement) {
+                inputElement.value = values[index] || ''
+              }
+            })
+          }
+
+          reader.readAsArrayBuffer(file)
+        } else {
+          console.log('No file selected')
+        }
+      })
+    </script>
+  </body>
 </html>
