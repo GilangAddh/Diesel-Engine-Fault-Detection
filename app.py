@@ -88,21 +88,17 @@ def predict():
         data = np.array([float(item) for item in data], dtype=np.float32)
     else:
         return jsonify({'message': 'Invalid input', 'code': 400})
-
     
     data = np.expand_dims(data, axis=0) 
     
-    # Set session options to limit threads and disable parallel execution
     session_options = ort.SessionOptions()
-    session_options.intra_op_num_threads = 1  # Limit the number of threads for parallel execution
-    session_options.inter_op_num_threads = 1  # Limit threads between operators
-    session_options.execution_mode = ort.ExecutionMode.ORT_SEQUENTIAL  # Disable parallel execution
+    session_options.intra_op_num_threads = 1  
+    session_options.inter_op_num_threads = 1 
+    session_options.execution_mode = ort.ExecutionMode.ORT_SEQUENTIAL 
 
-    # Load ONNX model with session options
     model_path = 'model/model.onnx'
     session = ort.InferenceSession(model_path, sess_options=session_options)
         
-    
     input_name = session.get_inputs()[0].name
     result = session.run(None, {input_name: data})
 

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -15,8 +15,9 @@
       rel="stylesheet" />
   </head>
   <body class="font-[Poppins]">
-    <header class="bg-[#03AED2] sticky top-0 z-10">
-      <p class="p-4 text-2xl text-[#EEF7FF] font-bold">Diesel Diagnosys</p>
+    <header class="bg-[#03AED2] sticky top-0 z-10 p-4">
+      <p class="text-2xl text-[#EEF7FF] font-bold">Sistem Deteksi Kerusakan</p>
+      <p class="text-[#EEF7FF] font-semibold">Mesin Diesel Berbasis Web</p>
     </header>
     <main class="bg-[#EEF7FF]">
       <section id="hero">
@@ -33,15 +34,17 @@
                   menerima data sinyal mesin. Data yang diinputkan berjumlah 84 data yang terbagi menjadi 6 data Tekanan
                   Maksimal, 6 data Tekanan Rata-Rata, 24 data Frekuensi, 24 data Amplitude dan 24 data Gerakan Harmoni.
                 </p>
-                <button
+                <a
+                  href="#deteksi"
                   class="btn font-bold bg-[#03AED2] text-white hover:text-[#03AED2] hover:bg-white hover:border-[#03AED2] border-2">
                   Ayo Deteksi
-                </button>
+                </a>
               </div>
             </div>
           </div>
         </div>
       </section>
+      <div id="deteksi" class="relative -top-20"></div>
       <section>
         <div class="p-6 m-6 rounded-lg border-2 border-dashed border-[#03AED2]">
           <div class="flex items-center justify-between">
