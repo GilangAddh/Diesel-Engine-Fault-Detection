@@ -141,6 +141,9 @@
     <script src="https://kit.fontawesome.com/3cfd8eaa87.js" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <script>
+      const isDebug = '{{isDebug}}'
+      const predictLink = isDebug === 'true' ? '/predict' : '/detection/predict'
+
       document.getElementById('predictForm').addEventListener('submit', function (e) {
         e.preventDefault()
 
@@ -153,8 +156,8 @@
           }
           data[key].push(parseFloat(value))
         })
-        console.log(data)
-        fetch('/predict', {
+
+        fetch(predictLink, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
@@ -163,11 +166,7 @@
         })
           .then(response => response.json())
           .then(data => {
-            console.log(data)
-            // Isi modal dengan hasil prediksi
             document.getElementById('predictionOutput').textContent = `Prediction: ${data.data}`
-
-            // Tampilkan modal
             document.getElementById('my-modal').checked = true
           })
           .catch(error => {
