@@ -88,7 +88,6 @@ def predict():
         data = np.array([float(item) for item in data], dtype=np.float32)
     else:
         return jsonify({'message': 'Invalid input', 'code': 400})
-
     
     data = np.expand_dims(data, axis=0) 
     
@@ -100,7 +99,6 @@ def predict():
     model_path = 'model/model.onnx'
     session = ort.InferenceSession(model_path, sess_options=session_options)
         
-    
     input_name = session.get_inputs()[0].name
     result = session.run(None, {input_name: data})
 
