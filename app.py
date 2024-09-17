@@ -106,7 +106,6 @@ def predict():
     model_path = 'model/model.onnx'
     session = ort.InferenceSession(model_path, sess_options=session_options)
         
-    
     input_name = session.get_inputs()[0].name
     result = session.run(None, {input_name: data})
 
