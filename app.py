@@ -13,12 +13,14 @@ def home():
         {
             "name": "Tekanan Maksimal",
             "label": ["Tekanan Maksimal 1", "Tekanan Maksimal 2", "Tekanan Maksimal 3", "Tekanan Maksimal 4", "Tekanan Maksimal 5", "Tekanan Maksimal 6"],
-            "input": ["mp1", "mp2", "mp3", "mp4", "mp5", "mp6"]
+            "input": ["mp1", "mp2", "mp3", "mp4", "mp5", "mp6"],
+            "satuan": "Pa"
         },
         {
             "name": "Tekanan Rata-Rata",
             "label": ["Tekanan Rata-Rata 1", "Tekanan Rata-Rata 2", "Tekanan Rata-Rata 3", "Tekanan Rata-Rata 4", "Tekanan Rata-Rata 5", "Tekanan Rata-Rata 6"],
-            "input": ["mu1", "mu2", "mu3", "mu4", "mu5", "mu6"]
+            "input": ["mu1", "mu2", "mu3", "mu4", "mu5", "mu6"],
+            "satuan": "Pa"
         },
         {
             "name": "Frekuensi",
@@ -34,7 +36,9 @@ def home():
                 "fr7", "fr8", "fr9", "fr10", "fr11", "fr12", 
                 "fr13", "fr14", "fr15", "fr16", "fr17", "fr18",
                 "fr19", "fr20", "fr21", "fr22", "fr23", "fr24"
-            ]
+            ],
+            "satuan": "Hz"
+
         },
         {
             "name": "Amplitude",
@@ -50,7 +54,8 @@ def home():
                 "amp7", "amp8", "amp9", "amp10", "amp11", "amp12", 
                 "amp13", "amp14", "amp15", "amp16", "amp17", "amp18",
                 "amp19", "amp20", "amp21", "amp22", "amp23", "amp24"
-            ]
+            ],
+            "satuan": "mm"
         },
         {
             "name": "Gerakan Harmoni",
@@ -66,7 +71,8 @@ def home():
                 "gh7", "gh8", "gh9", "gh10", "gh11", "gh12", 
                 "gh13", "gh14", "gh15", "gh16", "gh17", "gh18",
                 "gh19", "gh20", "gh21", "gh22", "gh23", "gh24"
-            ]
+            ],
+            "satuan": "Nm"
         }
     ]
     
