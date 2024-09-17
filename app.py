@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request,jsonify
 from flask_cors import CORS
+from sklearn.preprocessing import MinMaxScaler, StandardScaler
 import onnxruntime as ort
 import numpy as np
 
@@ -86,11 +87,17 @@ def predict():
 
     if isinstance(data, list):
         data = np.array([float(item) for item in data], dtype=np.float32)
+        if np.any(data > 1):
+            scaler = MinMaxScaler()
+            split_data = np.split(data, [6, 12, 36, 60])        
+            normalized_data = [scaler.fit_transform(segment.reshape(-1, 1)).flatten() for segment in split_data]
+
+            data = np.concatenate(normalized_data)
     else:
         return jsonify({'message': 'Invalid input', 'code': 400})
     
-    data = np.expand_dims(data, axis=0) 
-    
+    data = np.expand_dims(data, axis=0)
+        
     session_options = ort.SessionOptions()
     session_options.intra_op_num_threads = 1  
     session_options.inter_op_num_threads = 1 
