@@ -1,6 +1,9 @@
+import os
+os.environ['OPENBLAS_NUM_THREADS'] = '1'
+
 from flask import Flask, render_template, request,jsonify
 from flask_cors import CORS
-from sklearn.preprocessing import MinMaxScaler, StandardScaler
+from sklearn.preprocessing import MinMaxScaler
 import onnxruntime as ort
 import numpy as np
 
