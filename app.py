@@ -88,9 +88,11 @@ def predict():
         3: 'reduction of amount of fuel injected'
     }
 
-    data = request.json
-    data = data.get('data_item', [])
-
+    req = request.json
+    
+    model_name = req.get("model", "")
+    data = req.get('data_item', [])
+   
     if isinstance(data, list):
         data = np.array([float(item) for item in data], dtype=np.float32)
         if np.any(data > 1):
@@ -101,15 +103,21 @@ def predict():
             data = np.concatenate(normalized_data)
     else:
         return jsonify({'message': 'Invalid input', 'code': 400})
-    
-    data = np.expand_dims(data, axis=0)
         
     session_options = ort.SessionOptions()
     session_options.intra_op_num_threads = 1  
     session_options.inter_op_num_threads = 1 
     session_options.execution_mode = ort.ExecutionMode.ORT_SEQUENTIAL 
 
-    model_path = 'model/model.onnx'
+    if model_name == "ANN":
+        model_path = 'model/model_ann.onnx'
+        data = np.expand_dims(data, axis=0)
+        accuracy = '82.7%'
+    elif model_name == "LSTM":
+        model_path = 'model/model_lstm.onnx'
+        data = data.reshape(1, 1, -1)
+        accuracy = '82.8%'
+
     session = ort.InferenceSession(model_path, sess_options=session_options)
         
     input_name = session.get_inputs()[0].name
@@ -121,7 +129,7 @@ def predict():
     return jsonify({
         'message':'success',
         'code':200,
-        "data":predicted_labels[0],
+        "data":{'label':predicted_labels[0],'accuracy':accuracy,'model':model_name},
     })
 
 if __name__ == '__main__':
